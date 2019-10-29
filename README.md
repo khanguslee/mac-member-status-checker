@@ -12,3 +12,4 @@ This will be used for the Monash Association of Coding (MAC) Open Source project
 | ------------ | ---------------------------------------------------------- |
 | PORT         | Port you would like to host the server                     |
 | SECRET_TOKEN | A secret token that is stored on server-side and on Github |
+| ACCESS_TOKEN | Your personal access token                                 |
