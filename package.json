@@ -7,7 +7,10 @@
     "build": "babel src --out-dir dist",
     "serve": "node dist/server.js"
   },
-  "repository": "git@github.com:khanguslee/github-custom-status-checker.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/khanguslee/github-custom-status-checker.git"
+  },
   "author": "Kuan Hou Lee <angus.lee809@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -30,5 +33,10 @@
     "express": "^4.17.1",
     "mongoose": "^5.7.7",
     "validator": "^12.0.0"
-  }
+  },
+  "description": "This will be used for the Monash Association of Coding (MAC) Open Source project where only members of MAC are able to send PRs to the repository. Using this status checker, we can ensure that the user sending a PR is a member of MAC!",
+  "bugs": {
+    "url": "https://github.com/khanguslee/github-custom-status-checker/issues"
+  },
+  "homepage": "https://github.com/khanguslee/github-custom-status-checker#readme"
 }
