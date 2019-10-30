@@ -32,8 +32,13 @@ router.post('/valid_member', function(req, res) {
     description: 'MAC Member',
     context: contextName,
   };
-  axios.post(statusAPIUrl, message);
+
+  // FIXME: Add delay to compensate for above TODOs.
+  setTimeout(function() {
+    axios.post(statusAPIUrl, message);
+  }, 2000);
   // TODO: If username does not exist, reject PR
+  res.send('MAC membership checked!');
 });
 
 module.exports = router;
