@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_API_URL = 'https://api.github.com';
 
-export function checkValidMember(req, res) {
+exports.checkValidMember = function(req, res) {
   console.log(req.body);
   const pullRequestBody = req.body.pull_request;
   const username = pullRequestBody.user.login;
@@ -37,4 +37,4 @@ export function checkValidMember(req, res) {
   }, 2000);
   // TODO: If username does not exist, reject PR
   res.send('MAC membership checked!');
-}
+};
