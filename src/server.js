@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import status from './routes/status';
-import verifyGithubPayload from './verify_payload';
+import statusRouter from './routes/status';
+import verifyGithubPayload from './middlewares/verify_payload';
 
 dotenv.config();
 
@@ -19,6 +19,6 @@ server.listen(PORT, () => {
 });
 
 /* Routes */
-app.use('/status', verifyGithubPayload, status);
+app.use('/status', verifyGithubPayload, statusRouter);
 
 export default server;
