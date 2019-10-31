@@ -8,6 +8,8 @@ This will be used for the Monash Association of Coding (MAC) Open Source project
 
 ### Set up environment variables
 
+_Suggested:_ Create a `.env` file with the following values.
+
 | ENV Variable | Value                                                      |
 | ------------ | ---------------------------------------------------------- |
 | PORT         | Port you would like to host the server                     |
