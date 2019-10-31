@@ -52,6 +52,14 @@ yarn install
 
 #### Development
 
+To start the server:
+
+```bash
+npm run start
+```
+
+##### Hosting the server locally
+
 I suggest setting up ngrok. This library allows you you to host your localhost node server and expose it publically.
 
 Starting ngrok:
