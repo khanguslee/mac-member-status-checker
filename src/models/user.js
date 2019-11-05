@@ -3,13 +3,17 @@ import validator from 'validator';
 
 const UserSchema = new mongoose.Schema(
   {
-    name: String,
+    name: { type: String, default: null },
     email: {
       type: String,
+      required: true,
       unique: true,
       lowercase: true,
-      validate: value => {
-        return validator.isEmail(value);
+      validate: {
+        validator: value => {
+          return validator.isEmail(value);
+        },
+        message: 'Invalid email',
       },
     },
     github: { type: String, required: true, unique: true },
@@ -39,7 +43,7 @@ UserSchema.methods.activateMembership = function() {
  * Reset active membership status
  */
 UserSchema.methods.resetMembership = function() {
-  this.active = false;
+  this.membership.active = false;
 };
 
 /*
