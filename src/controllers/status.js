@@ -1,9 +1,9 @@
 import axios from 'axios';
 
+import { validateHandler } from './member';
 const BASE_API_URL = 'https://api.github.com';
 
 exports.checkValidMember = function(req, res) {
-  console.log(req.body);
   const pullRequestBody = req.body.pull_request;
   const username = pullRequestBody.user.login;
   const commitSHA = pullRequestBody.head.sha;
@@ -14,7 +14,7 @@ exports.checkValidMember = function(req, res) {
 
   const statusAPIUrl = `${BASE_API_URL}/repos/${repositoryName}/statuses/${commitSHA}?access_token=${process.env.ACCESS_TOKEN}`;
   const contextName = 'MAC-member-checker';
-  // Pending message
+  // Send pending status message to Github
   const pendingMessage = {
     state: 'pending',
     description: 'Checking if you are a MAC member...',
@@ -22,19 +22,23 @@ exports.checkValidMember = function(req, res) {
   };
   axios.post(statusAPIUrl, pendingMessage);
 
-  // TODO: Connect with database to check if username exists
+  // Connect with database to check if username exists
+  validateHandler(username, function(err, validUser) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      const outputState = validUser ? 'success' : 'failure';
+      const message = {
+        state: outputState,
+        description: 'MAC Member',
+        context: contextName,
+      };
 
-  // TODO: If username exists, approve status
-  const message = {
-    state: 'success',
-    description: 'MAC Member',
-    context: contextName,
-  };
-
-  // FIXME: Add delay to compensate for above TODOs.
-  setTimeout(function() {
-    axios.post(statusAPIUrl, message);
-  }, 2000);
-  // TODO: If username does not exist, reject PR
-  res.send('MAC membership checked!');
+      // Send completed status message to Github
+      setTimeout(function() {
+        axios.post(statusAPIUrl, message);
+      }, 1000);
+      res.status(200).send('MAC membership checked!');
+    }
+  });
 };

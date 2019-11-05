@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
 /*
  * Set the current membership to active
  */
-UserSchema.methods.setMembershipActive = function() {
+UserSchema.methods.activateMembership = function() {
   // Update year
   const currentYear = new Date().getFullYear();
   if (!this.membership.years.includes(currentYear)) {
