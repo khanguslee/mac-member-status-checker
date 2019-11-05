@@ -1,56 +1,70 @@
 import UserModel from '../models/user';
 
+exports.addHandler = function(inputUserDetails, callback) {
+  // Get request body parameters
+  const email = inputUserDetails.email;
+  const githubUsername = inputUserDetails.github;
+
+  // Setup mongoose queries
+  const query = { email };
+  const currentYear = new Date().getFullYear();
+  const appendYearQuery = {
+    $addToSet: { 'membership.years': currentYear },
+    $set: { 'membership.active': true },
+  };
+  UserModel.findOneAndUpdate(query, appendYearQuery, function(err, result) {
+    if (err) {
+      callback({ errorCode: 500, message: err });
+    }
+    // Can't find github username in database, create it instead
+    if (!result) {
+      const newUser = new UserModel(inputUserDetails);
+      newUser.activateMembership();
+      newUser.save(function(err) {
+        if (err) {
+          // Duplicate key error
+          if (err.code === 11000) {
+            callback({
+              errorCode: 409,
+              message: `Github username ${githubUsername} already exists`,
+            });
+          } else {
+            // Some other untreated error
+            callback({
+              errorCode: 409,
+              message: `${err.name}: ${err.errmsg}`,
+            });
+          }
+        } else {
+          callback(null, `Added ${githubUsername} to MAC!`);
+        }
+      });
+    } else {
+      // Stored github username is different
+      if (result.github !== githubUsername) {
+        callback({
+          errorCode: 409,
+          message:
+            'Email exists already but stored github account is different, please update.',
+        });
+      } else {
+        callback(null, `Added ${githubUsername} to MAC!`);
+      }
+    }
+  });
+};
+
 /*
  * Adds a member to MAC.
  * If user exists already, we add an additional year to their history and activate membership again
  */
 exports.add = function(req, res) {
   try {
-    // Get request body parameters
-    const email = req.body.email;
-    const githubUsername = req.body.github;
-
-    // Setup mongoose queries
-    const query = { email };
-    const currentYear = new Date().getFullYear();
-    const appendYearQuery = {
-      $addToSet: { 'membership.years': currentYear },
-      $set: { 'membership.active': true },
-    };
-    UserModel.findOneAndUpdate(query, appendYearQuery, function(err, result) {
+    exports.addHandler(req.body, function(err, responseMessage) {
       if (err) {
-        res.status(500).send(`${err.name}: ${err.errmsg}`);
-      }
-      // Can't find github username in database, create it instead
-      if (!result) {
-        const newUser = new UserModel(req.body);
-        newUser.activateMembership();
-        newUser.save(function(err) {
-          if (err) {
-            // Duplicate key error
-            if (err.code === 11000) {
-              res
-                .status(409)
-                .send(`Github username ${githubUsername} already exists`);
-            } else {
-              // Some other untreated error
-              res.status(409).send(`${err.name}: ${err.errmsg}`);
-            }
-          } else {
-            res.status(201).send(`Added ${githubUsername} to MAC!`);
-          }
-        });
+        res.status(err.errorCode).send(err.message);
       } else {
-        // Stored github username is different
-        if (result.github !== githubUsername) {
-          res
-            .status(409)
-            .send(
-              'Email exists already but stored github account is different, please update.',
-            );
-        } else {
-          res.status(201).send(`Added ${githubUsername} to MAC!`);
-        }
+        res.status(201).send(responseMessage);
       }
     });
   } catch (error) {
