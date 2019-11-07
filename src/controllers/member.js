@@ -1,9 +1,12 @@
 import UserModel from '../models/user';
 
+import logger from './../logger';
+
 exports.addHandler = function(inputUserDetails, callback) {
   // Get request body parameters
   const email = inputUserDetails.email;
   const githubUsername = inputUserDetails.github;
+  logger.debug(`Adding Member - Github: ${githubUsername} Email: ${email}`);
 
   // Setup mongoose queries
   const query = { email };
@@ -73,6 +76,7 @@ exports.add = function(req, res) {
 };
 
 exports.validateHandler = function(inputGithubUsername, callback) {
+  logger.debug(`Validating Member - Github: ${inputGithubUsername}`);
   const query = { github: inputGithubUsername };
   UserModel.findOne(query, function(err, result) {
     if (err) {

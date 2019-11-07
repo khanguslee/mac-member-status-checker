@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 import { validateHandler } from './member';
+import logger from './../logger';
+
 const BASE_API_URL = 'https://api.github.com';
 
 exports.checkValidMember = function(req, res) {
@@ -10,7 +12,7 @@ exports.checkValidMember = function(req, res) {
 
   const repositoryBody = req.body.repository;
   const repositoryName = repositoryBody.full_name;
-  console.log(`Pull Request opened up by: ${username}`);
+  logger.info(`Pull Request opened up by: ${username}`);
 
   const statusAPIUrl = `${BASE_API_URL}/repos/${repositoryName}/statuses/${commitSHA}?access_token=${process.env.ACCESS_TOKEN}`;
   const contextName = 'MAC-member-checker';
@@ -20,6 +22,7 @@ exports.checkValidMember = function(req, res) {
     description: 'Checking if you are a MAC member...',
     context: contextName,
   };
+  logger.debug(`Sending pending status message to github for ${username}`);
   axios.post(statusAPIUrl, pendingMessage);
 
   // Connect with database to check if username exists
@@ -36,6 +39,9 @@ exports.checkValidMember = function(req, res) {
 
       // Send completed status message to Github
       setTimeout(function() {
+        logger.debug(
+          `Sending completed status message to github for ${username}`,
+        );
         axios.post(statusAPIUrl, message);
       }, 1000);
       res.status(200).send('MAC membership checked!');
