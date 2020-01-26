@@ -92,7 +92,7 @@ Everytime the repository receives a pull request, your server should receive a P
 
 ## REST Endpoints
 
-| URL             | Method | Body                                   | Description                              |
-| --------------- | ------ | -------------------------------------- | ---------------------------------------- |
-| `/member/add`   | POST   | `{ email: <string>, github: <string>}` | Add a new member to the databas          |
-| `/member/valid` | POST   | `{ github: <string>}`                  | Check if a github user is a valid member |
+| URL             | Method | Body                                                   | Description                              |
+| --------------- | ------ | ------------------------------------------------------ | ---------------------------------------- |
+| `/member/add`   | POST   | `{ name: <string>, email: <string>, github: <string>}` | Add a new member to the databas          |
+| `/member/valid` | POST   | `{ github: <string>}`                                  | Check if a github user is a valid member |
