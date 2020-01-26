@@ -89,3 +89,9 @@ Select _Let me select individual events_ then select _Pull requests_.
 Click _Add webhook_
 
 Everytime the repository receives a pull request, your server should receive a POST request!
+
+## REST Endpoints
+
+| URL           | Method | Body                                   | Description                     |
+| ------------- | ------ | -------------------------------------- | ------------------------------- |
+| `/member/add` | POST   | `{ email: <string>, github: <string>}` | Add a new member to the databas |
