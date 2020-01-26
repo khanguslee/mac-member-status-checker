@@ -94,5 +94,5 @@ Everytime the repository receives a pull request, your server should receive a P
 
 | URL             | Method | Body                                                   | Description                              |
 | --------------- | ------ | ------------------------------------------------------ | ---------------------------------------- |
-| `/member/add`   | POST   | `{ name: <string>, email: <string>, github: <string>}` | Add a new member to the databas          |
+| `/member/add`   | POST   | `{ name: <string>, email: <string>, github: <string>}` | Add a new member to the database         |
 | `/member/valid` | POST   | `{ github: <string>}`                                  | Check if a github user is a valid member |
